@@ -1303,4 +1303,18 @@ input:focus, textarea:focus, select:focus {
     .welcome-img {
         display: none;
     }
+    
+    .rf-tabs-nav {
+        flex-direction: column;
+        gap: 6px;
+        border-radius: 4px;
+        padding: 6px;
+    }
+    
+    .rf-tab-btn {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+        padding: 12px;
+    }
 }
