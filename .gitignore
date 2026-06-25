@@ -15,3 +15,8 @@ node_modules
 
 #!.yarn/cache
 .pnp.*
+
+# Python virtual environment and cache
+.venv/
+__pycache__/
+*.pyc

@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analítica de Datos - Proyecto Consolidado</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom Style -->
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="dark-theme">
+    <div class="app-container">
+        <!-- Barra de Navegación Lateral (Sidebar) -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fa-solid fa-chart-line-avg"></i>
+                    <span>Analítica</span>
+                </div>
+                <button class="close-sidebar-btn" id="closeSidebar"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <nav class="sidebar-menu">
+                <ul>
+                    <li>
+                        <a href="#inicio" class="menu-link active" data-target="panel-inicio">
+                            <span>Inicio / Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#random-forest" class="menu-link" data-target="panel-random-forest">
+                            <span>Random Forest</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#regresion-1" class="menu-link" data-target="panel-regresion-1">
+                            <span>Regresión Lineal 1</span>
+                        </a>
+                    </li>
+                    <li class="menu-dropdown-container">
+                        <button class="menu-dropdown-toggle" id="dropdownToggle">
+                            <span>Regresión Lineal 2</span>
+                            <i class="fa-solid fa-chevron-down dropdown-arrow"></i>
+                        </button>
+                        <ul class="dropdown-submenu" id="dropdownSubmenu">
+                            <li>
+                                <a href="#regresion-2-1" class="menu-link" data-target="panel-regresion-2-1">
+                                    <span>Repartidores</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#regresion-2-2" class="menu-link" data-target="panel-regresion-2-2">
+                                    <span>Backups</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="user-badge">
+                    <div class="user-info">
+                        <span class="user-name">Alexis Eduardo Gutiérrez Cedillo</span>
+                        <span class="user-role">Analítica de Datos</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Contenedor Principal (Main Content) -->
+        <main class="main-content">
+            <header class="top-header">
+                <div class="header-left">
+                    <button class="menu-btn" id="menuBtn"><i class="fa-solid fa-bars"></i></button>
+                    <h1 id="pageTitle">Inicio / Dashboard</h1>
+                </div>
+                <div class="header-right">
+                    <div class="db-badge connected" id="dbStatus">
+                        <span class="indicator-dot"></span>
+                        <span class="db-text">DB: SQLite</span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content-wrapper">
+                
+                <!-- ========================================== -->
+                <!-- PANEL: INICIO / DASHBOARD -->
+                <!-- ========================================== -->
+                <section class="panel-section active" id="panel-inicio">
+                    <div class="welcome-banner">
+                        <div class="welcome-text">
+                            <h2>Bienvenido al Consolidado de Proyectos de Analítica</h2>
+                            <p>Esta aplicación unifica tres proyectos de analítica de datos en una sola plataforma interactiva de alto rendimiento.</p>
+                        </div>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-info">
+                                <h3>Random Forest</h3>
+                                <p class="stat-value" id="stats-rf">-</p>
+                                <span class="stat-desc">Pacientes COVID-19</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-info">
+                                <h3>Regresión Lineal 1</h3>
+                                <p class="stat-value" id="stats-rl1">-</p>
+                                <span class="stat-desc">Registros de inversiones</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-info">
+                                <h3>Regresión 2 - Ejercicio 1</h3>
+                                <p class="stat-value" id="stats-rl2-1">-</p>
+                                <span class="stat-desc">Datos de repartidores</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-info">
+                                <h3>Regresión 2 - Ejercicio 2</h3>
+                                <p class="stat-value" id="stats-rl2-2">-</p>
+                                <span class="stat-desc">Datos de copias de seguridad</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-grid">
+                        <div class="glass-card project-overview-card">
+                            <h3>Modelos Analíticos Incluidos</h3>
+                            <div class="project-details-list">
+                                <div class="project-item">
+                                    <h4>Random Forest (COVID-19)</h4>
+                                    <p>Predice la supervivencia del paciente en base a su diagnóstico, intervención clínica realizada, cantidad y tarifa facturada. Incluye un módulo de análisis textual clínico (Etapa 1: Detective) y un clasificador entrenado sobre más de 117 mil registros (Etapa 2: Modelo).</p>
+                                </div>
+                                <div class="project-item">
+                                    <h4>Regresión Lineal 1 (Inversiones vs Ventas)</h4>
+                                    <p>Analiza el comportamiento histórico de ventas y predice de forma automática las ventas del mes siguiente de acuerdo a una progresión uniforme de inversión.</p>
+                                </div>
+                                <div class="project-item">
+                                    <h4>Regresión Lineal 2 - Ejercicios 1 y 2</h4>
+                                    <p>Modela la relación lineal para estimar el tiempo de entrega de repartidores en base a la distancia, y el tamaño de almacenamiento necesario en base al número de usuarios del sistema.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="glass-card status-overview-card">
+                            <h3>Estado del Sistema</h3>
+                            <ul class="system-status-list">
+                                <li>
+                                    <span class="status-label">Servidor Backend:</span>
+                                    <span class="status-badge success">Activo (Node.js)</span>
+                                </li>
+                                <li>
+                                    <span class="status-label">Base de Datos Central:</span>
+                                    <span class="status-badge success" id="dbTypeBadge">SQLite Conectado</span>
+                                </li>
+                                <li>
+                                    <span class="status-label">Modelo RF Precargado:</span>
+                                    <span class="status-badge success">JSON Cargado (50 Árboles)</span>
+                                </li>
+                                <li>
+                                    <span class="status-label">Precisión del Modelo:</span>
+                                    <span class="status-badge info">70.27% (Cross-Val)</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ========================================== -->
+                <!-- PANEL: RANDOM FOREST -->
+                <!-- ========================================== -->
+                <section class="panel-section" id="panel-random-forest">
+                    <div class="rf-tabs-nav">
+                        <button class="rf-tab-btn active" data-tab="rf-detective">Etapa 1: Detective NLP</button>
+                        <button class="rf-tab-btn" data-tab="rf-predictor">Etapa 2: Predictor de Supervivencia</button>
+                        <button class="rf-tab-btn" data-tab="rf-explorer">Explorador de Pacientes</button>
+                    </div>
+
+                    <div class="rf-tab-content active" id="rf-detective">
+                        <div class="panel-layout">
+                            <!-- Columna Izquierda: Configuración del Detective -->
+                            <div class="panel-left-form glass-card">
+                                <h3>Módulo Detective (NLP Masivo)</h3>
+                                <p class="form-desc">El script original de Detective escanea los expedientes clínicos de todos los pacientes en la base de datos para etiquetar la mortalidad de forma masiva antes de entrenar el clasificador.</p>
+                                
+                                <div class="form-group" style="margin-top: 16px;">
+                                    <label>Raíces Clave de Mortalidad:</label>
+                                    <div class="badge-list" style="display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap;">
+                                        <span class="badge" style="font-size:12px; font-weight:600; padding:6px 12px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); color: #f8fafc;">morir</span>
+                                        <span class="badge" style="font-size:12px; font-weight:600; padding:6px 12px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); color: #f8fafc;">óbito</span>
+                                        <span class="badge" style="font-size:12px; font-weight:600; padding:6px 12px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); color: #f8fafc;">fallecer</span>
+                                        <span class="badge" style="font-size:12px; font-weight:600; padding:6px 12px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); color: #f8fafc;">defunción</span>
+                                        <span class="badge" style="font-size:12px; font-weight:600; padding:6px 12px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); color: #f8fafc;">deceso</span>
+                                        <span class="badge" style="font-size:12px; font-weight:600; padding:6px 12px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); color: #f8fafc;">finado</span>
+                                        <span class="badge" style="font-size:12px; font-weight:600; padding:6px 12px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); color: #f8fafc;">cadáver</span>
+                                        <span class="badge" style="font-size:12px; font-weight:600; padding:6px 12px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); color: #f8fafc;">difunto</span>
+                                        <span class="badge" style="font-size:12px; font-weight:600; padding:6px 12px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); color: #f8fafc;">autopsia</span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group" style="margin-top: 20px;">
+                                    <label>Total a procesar:</label>
+                                    <p style="font-size: 20px; font-weight: 700; color: #f8fafc; margin-top: 6px;">
+                                        <span id="detectiveTotalExpedientes">117,834</span> expedientes
+                                    </p>
+                                </div>
+
+                                <div class="button-group" style="margin-top: 28px; display: flex; flex-direction: column; gap: 10px;">
+                                    <button class="btn btn-primary" id="btnRunDetectiveAll" style="width: 100%; padding: 12px 20px;">Ejecutar Detective</button>
+                                    <button class="btn btn-outline" id="btnTrainRFAll" style="width: 100%; padding: 12px 20px;" disabled>Reentrenar Clasificador (RF)</button>
+                                </div>
+                            </div>
+                            
+                            <!-- Columna Derecha: Consola / Terminal de Salida -->
+                            <div class="panel-right-result glass-card" style="display: flex; flex-direction: column;">
+                                <h3>Consola de Ejecución</h3>
+                                <div class="terminal-container" style="flex: 1; background: #000000; border: 1px solid var(--border-card); border-radius: 4px; padding: 18px; font-family: 'Fira Code', 'Courier New', Courier, monospace; color: #e4e4e7; font-size: 13px; overflow-y: auto; min-height: 280px; margin-top: 12px; line-height: 1.6;">
+                                    <div id="terminalLog">
+                                        <span style="color: #64748b;">[Sistema] Listo para iniciar. Presione "Ejecutar Detective" en el panel izquierdo.</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="rf-tab-content" id="rf-predictor">
+                        <div class="panel-layout">
+                            <div class="panel-left-form glass-card">
+                                <h3>Simulador de Pacientes</h3>
+                                <p class="form-desc">Ingresa los datos del paciente para estimar la probabilidad de supervivencia utilizando el modelo de Random Forest de 50 árboles de decisión.</p>
+                                
+                                <div class="form-group autocomplete">
+                                    <label for="rfDx">Diagnóstico (dx):</label>
+                                    <input type="text" id="rfDx" placeholder="Ej: COVID-19 / NEUMONIA NO ESPECIFICADA">
+                                    <div class="autocomplete-items" id="rfDxAutocomplete"></div>
+                                </div>
+
+                                <div class="form-group autocomplete">
+                                    <label for="rfIntervencion">Intervención Clínica:</label>
+                                    <input type="text" id="rfIntervencion" placeholder="Ej: TERAPIA INTENSIVA / URGENCIAS">
+                                    <div class="autocomplete-items" id="rfIntervencionAutocomplete"></div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="rfCantidad">Cantidad (días/estancia):</label>
+                                        <input type="number" id="rfCantidad" min="1" value="1">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="rfTarifa">Tarifa Facturada ($):</label>
+                                        <input type="number" id="rfTarifa" min="0" value="1000">
+                                    </div>
+                                </div>
+
+                                <button class="btn btn-primary" id="btnPredictRF">Estimar Diagnóstico</button>
+                                
+                                <div class="presets-section">
+                                    <h5>Casos de Prueba Predeterminados:</h5>
+                                    <div class="presets-buttons">
+                                        <button class="btn btn-outline" id="preset1">Paciente Leve</button>
+                                        <button class="btn btn-outline" id="preset2">Caso Crítico Real</button>
+                                        <button class="btn btn-outline" id="preset3">Crítico (Pocos recursos)</button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="panel-right-result glass-card" id="predictorResultCard">
+                                <h3>Predicción del Clasificador</h3>
+                                <div class="result-placeholder" id="predictorPlaceholder">
+                                    <p>Esperando predicción... Ingresa los datos clínicos y presiona "Estimar Diagnóstico".</p>
+                                </div>
+                                <div class="predictor-result-data hidden" id="predictorResult">
+                                    <div class="verdict-banner" id="predictorVerdictBanner">
+                                        <span class="verdict-title">Predicción</span>
+                                        <h4 id="predictorVerdictText">SOBREVIVENCIA</h4>
+                                    </div>
+                                    <div class="probability-meters">
+                                        <div class="meter-group">
+                                            <div class="meter-label">
+                                                <span>Probabilidad de Sobrevivencia</span>
+                                                <span id="probSobreviveText">0%</span>
+                                            </div>
+                                            <div class="meter-bar-container">
+                                                <div class="meter-bar survive" id="probSobreviveBar" style="width: 0%"></div>
+                                            </div>
+                                        </div>
+                                        <div class="meter-group">
+                                            <div class="meter-label">
+                                                <span>Probabilidad de Fallecimiento</span>
+                                                <span id="probFalleceText">0%</span>
+                                            </div>
+                                            <div class="meter-bar-container">
+                                                <div class="meter-bar die" id="probFalleceBar" style="width: 0%"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="model-details-card">
+                                        <h5>Metadatos del Modelo:</h5>
+                                        <ul>
+                                            <li><strong>Codificación DX:</strong> <span id="encodedDxVal">-</span></li>
+                                            <li><strong>Codificación Intervención:</strong> <span id="encodedIntVal">-</span></li>
+                                            <li><strong>Árboles Votantes:</strong> 50 árboles de decisión</li>
+                                            <li><strong>Estado de Predicción:</strong> 100% de inferencia en JS</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="rf-tab-content" id="rf-explorer">
+                        <div class="glass-card explorer-card">
+                            <div class="explorer-header">
+                                <h3>Explorador de Pacientes</h3>
+                                <div class="filters-row">
+                                    <div class="search-input-container">
+                                        <i class="fa-solid fa-magnifying-glass"></i>
+                                        <input type="text" id="patientSearch" placeholder="Buscar por Nombre o Diagnóstico...">
+                                    </div>
+                                    <div class="select-container">
+                                        <select id="mortalidadFilter">
+                                            <option value="all">Filtrar Mortalidad: Todos</option>
+                                            <option value="0">Vivo (Sobreviviente)</option>
+                                            <option value="1">Fallecido</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="table-responsive">
+                                <table class="table" id="patientsTable">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Paciente</th>
+                                            <th>Edad</th>
+                                            <th>Género</th>
+                                            <th>Diagnóstico (dx)</th>
+                                            <th>Intervención</th>
+                                            <th>Días</th>
+                                            <th>Tarifa</th>
+                                            <th>Mortalidad</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="patientsTableBody">
+                                        <!-- Carga dinámica de pacientes -->
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="pagination-container">
+                                <span class="pagination-info" id="paginationInfo">Mostrando 0 a 0 de 0 registros</span>
+                                <div class="pagination-buttons">
+                                    <button class="btn btn-icon btn-outline" id="btnPrevPage"><i class="fa-solid fa-chevron-left"></i></button>
+                                    <button class="btn btn-icon btn-outline" id="btnNextPage"><i class="fa-solid fa-chevron-right"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ========================================== -->
+                <!-- PANEL: REGRESION LINEAL 1 -->
+                <!-- ========================================== -->
+                <section class="panel-section" id="panel-regresion-1">
+                    <div class="panel-layout double-col">
+                        <div class="panel-column-left">
+                            <div class="glass-card chart-card">
+                                <h3>Gráfico de Inversiones vs Ventas</h3>
+                                <div class="chart-container">
+                                    <canvas id="chartRegresion1"></canvas>
+                                </div>
+                                <div class="regression-math-card" id="equationCard1">
+                                    <p class="math-eq">Fórmula: Ventas = b₀ + b₁ × Inversión</p>
+                                    <p class="math-result" id="eqResult1">Cargando coeficientes...</p>
+                                </div>
+                            </div>
+                            
+                            <div class="glass-card table-actions-card">
+                                <div class="card-header-with-actions">
+                                    <h3>Historial de Ventas</h3>
+                                    <div class="button-group">
+                                        <button class="btn btn-primary" id="btnSimulateMonth">Predecir Siguiente Mes</button>
+                                        <button class="btn btn-danger btn-outline" id="btnResetRL1">Reset</button>
+                                    </div>
+                                </div>
+                                <div class="table-responsive max-h-300">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Mes</th>
+                                                <th>Inversión (x)</th>
+                                                <th>Ventas (y)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tableBodyRL1">
+                                            <!-- Carga dinámica -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel-column-right">
+                            <div class="glass-card form-card">
+                                <h3>Agregar Registro Manual</h3>
+                                <p class="form-desc">Ingresa un punto de datos personalizado para ajustar la curva de regresión de inversiones.</p>
+                                <div class="form-group">
+                                    <label for="rl1Mes">Mes (número):</label>
+                                    <input type="number" id="rl1Mes" min="1" placeholder="Ej: 9">
+                                </div>
+                                <div class="form-group">
+                                    <label for="rl1Inversion">Inversión ($):</label>
+                                    <input type="number" id="rl1Inversion" step="0.1" placeholder="Ej: 96.5">
+                                </div>
+                                <div class="form-group">
+                                    <label for="rl1Ventas">Ventas Realizadas ($):</label>
+                                    <input type="number" id="rl1Ventas" step="0.1" placeholder="Ej: 350.0">
+                                </div>
+                                <button class="btn btn-primary" id="btnAddRL1">Añadir Punto</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ========================================== -->
+                <!-- PANEL: REGRESION LINEAL 2 - EJERCICIO 1 (Repartidores) -->
+                <!-- ========================================== -->
+                <section class="panel-section" id="panel-regresion-2-1">
+                    <div class="panel-layout double-col">
+                        <div class="panel-column-left">
+                            <div class="glass-card chart-card">
+                                <h3>Gráfico de Distancia vs Tiempo (Repartidores)</h3>
+                                <div class="chart-container">
+                                    <canvas id="chartRegresion21"></canvas>
+                                </div>
+                                <div class="regression-math-card" id="equationCard21">
+                                    <p class="math-eq">Fórmula: Tiempo = b₀ + b₁ × Distancia</p>
+                                    <p class="math-result" id="eqResult21">Cargando coeficientes...</p>
+                                </div>
+                            </div>
+
+                            <div class="glass-card table-actions-card">
+                                <div class="card-header-with-actions">
+                                    <h3>Datos de los Repartidores</h3>
+                                    <button class="btn btn-danger btn-outline" id="btnResetRL21">Reset</button>
+                                </div>
+                                <div class="table-responsive max-h-300">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Distancia (km)</th>
+                                                <th>Tiempo (minutos)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tableBodyRL21">
+                                            <!-- Carga dinámica -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel-column-right">
+                            <div class="glass-card calculator-card">
+                                <h3>Estimador de Tiempos</h3>
+                                <p class="form-desc">Ingresa una distancia en kilómetros para calcular el tiempo estimado del envío basado en el modelo de regresión lineal.</p>
+                                <div class="form-group">
+                                    <label for="rl21DistInput">Distancia (km):</label>
+                                    <input type="number" id="rl21DistInput" step="0.1" placeholder="Ej: 3.5">
+                                </div>
+                                <button class="btn btn-primary" id="btnPredictRL21">Calcular Tiempo</button>
+                                
+                                <div class="calc-result hidden" id="calcResultRL21">
+                                    <div class="calc-verdict">
+                                        <span>Tiempo Estimado:</span>
+                                        <h4 id="calcResultRL21Val">0 min</h4>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="glass-card form-card">
+                                <h3>Añadir Datos de Reparto</h3>
+                                <p class="form-desc">Ingresa un nuevo registro observado para ajustar el estimador.</p>
+                                <div class="form-group">
+                                    <label for="rl21Dist">Distancia (km):</label>
+                                    <input type="number" id="rl21Dist" step="0.01" placeholder="Ej: 4.2">
+                                </div>
+                                <div class="form-group">
+                                    <label for="rl21Tiempo">Tiempo Realizado (min):</label>
+                                    <input type="number" id="rl21Tiempo" step="0.1" placeholder="Ej: 48">
+                                </div>
+                                <button class="btn btn-primary" id="btnAddRL21">Añadir Punto</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ========================================== -->
+                <!-- PANEL: REGRESION LINEAL 2 - EJERCICIO 2 (Históricos Backup) -->
+                <!-- ========================================== -->
+                <section class="panel-section" id="panel-regresion-2-2">
+                    <div class="panel-layout double-col">
+                        <div class="panel-column-left">
+                            <div class="glass-card chart-card">
+                                <h3>Gráfico de Usuarios vs Tamaño de Backup</h3>
+                                <div class="chart-container">
+                                    <canvas id="chartRegresion22"></canvas>
+                                </div>
+                                <div class="regression-math-card" id="equationCard22">
+                                    <p class="math-eq">Fórmula: Backup = b₀ + b₁ × Usuarios</p>
+                                    <p class="math-result" id="eqResult22">Cargando coeficientes...</p>
+                                </div>
+                            </div>
+
+                            <div class="glass-card table-actions-card">
+                                <div class="card-header-with-actions">
+                                    <h3>Datos del Almacenamiento</h3>
+                                    <button class="btn btn-danger btn-outline" id="btnResetRL22">Reset</button>
+                                </div>
+                                <div class="table-responsive max-h-300">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Usuarios Activos</th>
+                                                <th>Tamaño Backup (GB)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tableBodyRL22">
+                                            <!-- Carga dinámica -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel-column-right">
+                            <div class="glass-card calculator-card">
+                                <h3>Estimador de Almacenamiento</h3>
+                                <p class="form-desc">Ingresa el número de usuarios activos para estimar el tamaño requerido para la copia de seguridad.</p>
+                                <div class="form-group">
+                                    <label for="rl22UsersInput">Usuarios:</label>
+                                    <input type="number" id="rl22UsersInput" placeholder="Ej: 500">
+                                </div>
+                                <button class="btn btn-primary" id="btnPredictRL22">Calcular Almacenamiento</button>
+                                
+                                <div class="calc-result hidden" id="calcResultRL22">
+                                    <div class="calc-verdict">
+                                        <span>Tamaño Estimado:</span>
+                                        <h4 id="calcResultRL22Val">0 GB</h4>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="glass-card form-card">
+                                <h3>Añadir Datos de Copias</h3>
+                                <p class="form-desc">Añade un punto histórico para calibrar la regresión de capacidad.</p>
+                                <div class="form-group">
+                                    <label for="rl22Users">Usuarios Activos:</label>
+                                    <input type="number" id="rl22Users" placeholder="Ej: 450">
+                                </div>
+                                <div class="form-group">
+                                    <label for="rl22Backup">Tamaño de Backup (GB):</label>
+                                    <input type="number" id="rl22Backup" step="0.1" placeholder="Ej: 180">
+                                </div>
+                                <button class="btn btn-primary" id="btnAddRL22">Añadir Punto</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts de la Aplicación -->
+    <script src="/js/app.js"></script>
+</body>
+</html>
